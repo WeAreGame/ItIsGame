@@ -77,26 +77,26 @@ impl<'s> Player<'s> {
     }
 
     fn update_world_position(&mut self) {
-        match self.keydowns.last() {
-            Some(Keycode::W) => {
-                self.world_posy = cmp::max(0, self.world_posy - self.movement_speed)
-            }
-            Some(Keycode::A) => {
-                self.world_posx = cmp::max(0, self.world_posx - self.movement_speed)
-            }
-            Some(Keycode::S) => {
-                self.world_posy = cmp::min(
-                    (self.world_dimensions.1 - Player::size().1) as i32,
-                    self.world_posy + self.movement_speed,
-                )
-            }
-            Some(Keycode::D) => {
-                self.world_posx = cmp::min(
-                    (self.world_dimensions.0 - Player::size().0) as i32,
-                    self.world_posx + self.movement_speed,
-                )
-            }
-            _ => {}
+        if self.keydowns.contains(&Keycode::W) {
+            self.world_posy = cmp::max(0, self.world_posy - self.movement_speed)
+        }
+
+        if self.keydowns.contains(&Keycode::A) {
+            self.world_posx = cmp::max(0, self.world_posx - self.movement_speed)
+        }
+
+        if self.keydowns.contains(&Keycode::S) {
+            self.world_posy = cmp::min(
+                (self.world_dimensions.1 - Player::size().1) as i32,
+                self.world_posy + self.movement_speed,
+            )
+        }
+
+        if self.keydowns.contains(&Keycode::D) {
+            self.world_posx = cmp::min(
+                (self.world_dimensions.0 - Player::size().0) as i32,
+                self.world_posx + self.movement_speed,
+            )
         }
     }
 
