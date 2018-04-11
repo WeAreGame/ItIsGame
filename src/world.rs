@@ -59,4 +59,8 @@ impl<'a> World<'a> {
             item.render(canvas, world_rect.x - viewport.x, world_rect.y - viewport.y);
         }
     }
+
+    pub fn add_item(&mut self, item: Box<InWorld>) {
+        self.items.push(item)
+    }
 }
