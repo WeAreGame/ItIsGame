@@ -10,7 +10,7 @@ pub fn render(canvas: &mut Canvas<Window>, player: &Player, world: &World, show_
     let world_pos = world_position(world, player, screen_size);
     let viewport = Rect::new(world_pos.0, world_pos.1, screen_size.0, screen_size.1);
 
-    world.render(canvas, viewport);
+    world.render(canvas, viewport, show_perimeter);
     player.render(canvas, viewport, show_perimeter);
 }
 

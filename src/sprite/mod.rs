@@ -8,6 +8,7 @@ use std::path::Path;
 
 pub mod orb;
 pub mod tile;
+pub mod tree;
 
 pub trait SpritesheetLayout {
     type Sprite;

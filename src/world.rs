@@ -11,12 +11,12 @@ pub trait InWorld {
     fn update(&mut self) {}
     fn event_update(&mut self, &Event) {}
 
-    fn render(&self, &mut Canvas<Window>, i32, i32) {}
+    fn render(&self, &mut Canvas<Window>, i32, i32, bool) {}
 }
 
 pub struct World<'a> {
     tiles: Vec<Tile<'a>>,
-    items: Vec<Box<InWorld>>,
+    items: Vec<Box<InWorld + 'a>>,
     width: u32,
     height: u32,
 }
@@ -48,19 +48,29 @@ impl<'a> World<'a> {
     }
 
     // TODO: optimise not to render items outside viewport.
-    pub fn render(&self, canvas: &mut Canvas<Window>, viewport: Rect) {
+    pub fn render(&self, canvas: &mut Canvas<Window>, viewport: Rect, show_perimeter: bool) {
         for tile in &self.tiles {
             let world_rect = tile.world_rect();
-            tile.render(canvas, world_rect.x - viewport.x, world_rect.y - viewport.y);
+            tile.render(
+                canvas,
+                world_rect.x - viewport.x,
+                world_rect.y - viewport.y,
+                false,
+            );
         }
 
         for item in &self.items {
             let world_rect = item.world_rect();
-            item.render(canvas, world_rect.x - viewport.x, world_rect.y - viewport.y);
+            item.render(
+                canvas,
+                world_rect.x - viewport.x,
+                world_rect.y - viewport.y,
+                show_perimeter,
+            );
         }
     }
 
-    pub fn add_item(&mut self, item: Box<InWorld>) {
+    pub fn add_item(&mut self, item: Box<InWorld + 'a>) {
         self.items.push(item)
     }
 }
