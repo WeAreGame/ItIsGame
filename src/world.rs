@@ -16,6 +16,7 @@ pub trait InWorld {
 
 pub struct World<'a> {
     tiles: Vec<Tile<'a>>,
+    items: Vec<Box<InWorld>>,
     width: u32,
     height: u32,
 }
@@ -24,6 +25,7 @@ impl<'a> World<'a> {
     pub fn new(map: Map<'a>) -> Self {
         World {
             tiles: map.tiles,
+            items: vec![],
             width: map.width,
             height: map.height,
         }
@@ -33,16 +35,28 @@ impl<'a> World<'a> {
         (self.width, self.height)
     }
 
-    pub fn update(&mut self) {}
+    pub fn update(&mut self) {
+        for item in &mut self.items {
+            item.update();
+        }
+    }
 
-    pub fn event_update(&mut self, _event: &Event) {}
+    pub fn event_update(&mut self, event: &Event) {
+        for item in &mut self.items {
+            item.event_update(event);
+        }
+    }
 
+    // TODO: optimise not to render items outside viewport.
     pub fn render(&self, canvas: &mut Canvas<Window>, viewport: Rect) {
         for tile in &self.tiles {
             let world_rect = tile.world_rect();
-
-            // TODO: optimise not to render items outside viewport.
             tile.render(canvas, world_rect.x - viewport.x, world_rect.y - viewport.y);
+        }
+
+        for item in &self.items {
+            let world_rect = item.world_rect();
+            item.render(canvas, world_rect.x - viewport.x, world_rect.y - viewport.y);
         }
     }
 }
